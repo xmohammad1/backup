@@ -165,21 +165,21 @@ ACLover="x-ui backup"
 # ساخت فایل پشتیبانی برای نرم‌افزار Hiddify و ذخیره آن در فایل ac-backup.zip
 elif [[ "$xmh" == "h" ]]; then
 
-if ! find /opt/hiddify-config/hiddify-panel/ -type d -iname "backup" -print -quit; then
+if ! find /opt/hiddify-manager/hiddify-panel/ -type d -iname "backup" -print -quit; then
   echo "The folder does not exist."
   exit 1
 fi
 
 ZIP=$(cat <<EOF
-cd /opt/hiddify-config/hiddify-panel/
-if [ $(find /opt/hiddify-config/hiddify-panel/backup -type f | wc -l) -gt 100 ]; then
-  find /opt/hiddify-config/hiddify-panel/backup -type f -delete
+cd /opt/hiddify-manager/hiddify-panel/
+if [ $(find /opt/hiddify-manager/hiddify-panel/backup -type f | wc -l) -gt 100 ]; then
+  find /opt/hiddify-manager/hiddify-panel/backup -type f -delete
 fi
 python3 -m hiddifypanel backup
-cd /opt/hiddify-config/hiddify-panel/backup
+cd /opt/opt/hiddify-manager/hiddify-panel/backup
 latest_file=\$(ls -t *.json | head -n1)
 rm -f /root/ac-backup-h.zip
-zip /root/ac-backup-h.zip /opt/hiddify-config/hiddify-panel/backup/\$latest_file
+zip /root/ac-backup-h.zip /opt/hiddify-manager/hiddify-panel/backup/\$latest_file
 
 EOF
 )
