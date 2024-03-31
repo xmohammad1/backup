@@ -176,7 +176,7 @@ if [ $(find /opt/hiddify-manager/hiddify-panel/backup -type f | wc -l) -gt 100 ]
   find /opt/hiddify-manager/hiddify-panel/backup -type f -delete
 fi
 python3 -m hiddifypanel backup
-cd /opt/opt/hiddify-manager/hiddify-panel/backup
+cd /opt/hiddify-manager/hiddify-panel/backup
 latest_file=\$(ls -t *.json | head -n1)
 rm -f /root/ac-backup-h.zip
 zip /root/ac-backup-h.zip /opt/hiddify-manager/hiddify-panel/backup/\$latest_file
