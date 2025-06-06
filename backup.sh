@@ -125,7 +125,7 @@ chmod +x /var/lib/marzban/mysql/ac-backup.sh
 
 ZIP=$(cat <<EOF
 docker exec marzban-mysql-1 bash -c "/var/lib/mysql/ac-backup.sh"
-zip -r /root/ac-backup-m.zip /opt/marzban/* /var/lib/marzban/* /opt/marzban/.env /root/* -x /var/lib/marzban/mysql/\*
+zip -r /root/ac-backup-m.zip /opt/marzban/* /var/lib/marzban/* /opt/marzban/.env /root/* /root/.env -x /var/lib/marzban/mysql/\*
 zip -r /root/ac-backup-m.zip /var/lib/marzban/mysql/db-backup/*
 rm -rf /var/lib/marzban/mysql/db-backup/*
 EOF
