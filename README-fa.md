@@ -33,7 +33,7 @@
 <p align="right">ابتدا این دستور را روی سرور خود اجرا می کنید</p>
   
 ```bash
-bash <(curl -Ls https://github.com/AC-Lover/backup/raw/main/backup.sh)
+bash <(curl -Ls https://github.com/xmohammad1/backup/raw/main/backup.sh)
 ``` 
 
 ###
@@ -112,8 +112,8 @@ bash <(curl -Ls https://github.com/AC-Lover/backup/raw/main/backup.sh)
 
 <h1 align="right">ویدئو آموزشی</h1>
 
-https://github.com/AC-Lover/backup/assets/49290111/905c545c-caa9-4ad5-80d1-82c702fb3f2e
+https://github.com/xmohammad1/backup/assets/49290111/905c545c-caa9-4ad5-80d1-82c702fb3f2e
 
 ## Stargazers over time
 
-[![Stargazers over time](https://starchart.cc/AC-Lover/backup.svg)](https://starchart.cc/AC-Lover/backup)
+[![Stargazers over time](https://starchart.cc/xmohammad1/backup.svg)](https://starchart.cc/xmohammad1/backup)
