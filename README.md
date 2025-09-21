@@ -35,7 +35,10 @@
 ```bash
 bash <(curl -Ls https://github.com/xmohammad1/backup/raw/main/backup.sh)
 ``` 
-
+### SellerBots Backup
+```bash
+bash <(curl -Ls https://github.com/xmohammad1/backup/raw/main/sellerbotbackup.sh)
+```
 ###
 
 <h3 align="left">Step 2 : Token setting</h3>
@@ -118,4 +121,5 @@ https://github.com/xmohammad1/backup/assets/49290111/905c545c-caa9-4ad5-80d1-82c
 ## Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/xmohammad1/backup.svg)](https://starchart.cc/xmohammad1/backup)
+
 
