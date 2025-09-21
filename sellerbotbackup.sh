@@ -86,7 +86,26 @@ sudo apt install zip -y
 cat > "/root/opt-backup.sh" <<EOL
 #!/bin/bash
 rm -f /root/opt-backup.zip
-zip -r /root/opt-backup.zip /opt -x '*/venv/*' '*/venv/'
+files=()
+
+while IFS= read -r dir; do
+    if [[ -f "\${dir}/bot.db" ]]; then
+        files+=("\${dir}/bot.db")
+    fi
+    if [[ -f "\${dir}/vpn_bot/config.py" ]]; then
+        files+=("\${dir}/vpn_bot/config.py")
+    fi
+done < <(find /opt -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)
+
+if (( \${#files[@]} )); then
+    zip -r /root/opt-backup.zip "\${files[@]}"
+else
+    info_file=\$(mktemp)
+    echo "No bot.db or vpn_bot/config.py files found under /opt." > "\${info_file}"
+    zip -j /root/opt-backup.zip "\${info_file}"
+    rm -f "\${info_file}"
+fi
+
 echo -e "${comment}" | zip -z /root/opt-backup.zip
 curl -F chat_id="${chatid}" -F caption=\$'${caption}' -F parse_mode="HTML" -F document=@"/root/opt-backup.zip" https://api.telegram.org/bot${tk}/sendDocument
 EOL
