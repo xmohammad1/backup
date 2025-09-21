@@ -85,8 +85,34 @@ sudo apt install zip -y
 
 cat > "/root/opt-backup.sh" <<EOL
 #!/bin/bash
+set -euo pipefail
 rm -f /root/opt-backup.zip
-zip -r /root/opt-backup.zip /opt -x '*/venv/*' '*/venv/'
+mapfile -t opt_dirs < <(find /opt -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)
+files_to_backup=()
+
+for dir in "\${opt_dirs[@]}"; do
+    if [[ -f "\${dir}/bot.db" ]]; then
+        files_to_backup+=("\${dir}/bot.db")
+    fi
+    if [[ -f "\${dir}/vpn_bot/config.py" ]]; then
+        files_to_backup+=("\${dir}/vpn_bot/config.py")
+    fi
+done
+
+if [[ -f "/opt/bot.db" ]]; then
+    files_to_backup+=("/opt/bot.db")
+fi
+
+if [[ -f "/opt/vpn_bot/config.py" ]]; then
+    files_to_backup+=("/opt/vpn_bot/config.py")
+fi
+
+if [[ \${#files_to_backup[@]} -eq 0 ]]; then
+    echo "No matching files found under /opt."
+    exit 0
+fi
+
+zip /root/opt-backup.zip "\${files_to_backup[@]}"
 echo -e "${comment}" | zip -z /root/opt-backup.zip
 curl -F chat_id="${chatid}" -F caption=\$'${caption}' -F parse_mode="HTML" -F document=@"/root/opt-backup.zip" https://api.telegram.org/bot${tk}/sendDocument
 EOL
