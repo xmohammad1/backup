@@ -86,7 +86,7 @@ sudo apt install zip -y
 cat > "/root/opt-backup.sh" <<EOL
 #!/bin/bash
 rm -f /root/opt-backup.zip
-zip -r /root/opt-backup.zip /opt
+zip -r /root/opt-backup.zip /opt -x '*/venv/*' '*/venv/'
 echo -e "${comment}" | zip -z /root/opt-backup.zip
 curl -F chat_id="${chatid}" -F caption=\$'${caption}' -F parse_mode="HTML" -F document=@"/root/opt-backup.zip" https://api.telegram.org/bot${tk}/sendDocument
 EOL
