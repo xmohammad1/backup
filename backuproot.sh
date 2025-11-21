@@ -1,5 +1,5 @@
 # send backup to telegram
-tk="6940216689:AAHlKqHdvhk8NWfra82x5nJ1Ao2epqw3ZBg"
+tk="xxx"
 trim() {
     # remove leading and trailing whitespace/lines
     local var="$*"
@@ -16,7 +16,7 @@ comment=$(echo -e "$caption" | sed 's/<code>//g;s/<\/code>//g')
 comment=$(trim "$comment")
 xmh="m"
 comment=$(echo -e "$caption" | sed 's/<code>//g;s/<\/code>//g') comment=$(trim "$comment")
-chatid="73870242"
+chatid="xxx"
 cat > "/root/ac-backup-${xmh}.sh" <<EOL
 #!/bin/bash
 rm -rf /root/ac-backup-${xmh}.zip
