@@ -49,18 +49,19 @@ while true; do
 done
 
 
-
+# --- Modified Selection Section ---
 while [[ -z "$xmhs" ]]; do
-    echo "x-ui or s-ui or marzban or hiddify? [x/s/m/h] : "
+    echo "x-ui, s-ui, marzban, hiddify or root? [x/s/m/h/r] : "
     read -r xmhs
     if [[ $xmhs == $'\0' ]]; then
-        echo "Invalid input. Please choose x,s, m or h."
+        echo "Invalid input. Please choose x, s, m, h or r."
         unset xmhs
-    elif [[ ! $xmhs =~ ^[xmhs]$ ]]; then
-        echo "${xmhs} is not a valid option. Please choose x, m or h."
+    elif [[ ! $xmhs =~ ^[xmhsr]$ ]]; then
+        echo "${xmhs} is not a valid option. Please choose x, s, m, h or r."
         unset xmhs
     fi
 done
+# ----------------------------------
 
 while [[ -z "$crontabs" ]]; do
     echo "Would you like the previous crontabs to be cleared? [y/n] : "
@@ -81,32 +82,32 @@ fi
 
 if [[ "$xmhs" == "m" ]]; then
 
-if dir=$(find /opt /root -type d -iname "marzban" -print -quit); then
-  echo "The folder exists at $dir"
-else
-  echo "The folder does not exist."
-  exit 1
-fi
+    if dir=$(find /opt /root -type d -iname "marzban" -print -quit); then
+      echo "The folder exists at $dir"
+    else
+      echo "The folder does not exist."
+      exit 1
+    fi
 
-if [ -d "/var/lib/marzban/mysql" ] || [ -d "/var/lib/mysql/marzban" ]; then
+    if [ -d "/var/lib/marzban/mysql" ] || [ -d "/var/lib/mysql/marzban" ]; then
 
-path=""
+    path=""
 
-if [ -d "/var/lib/marzban/mysql" ]; then
-  path="/var/lib/marzban/mysql"
-elif [ -d "/var/lib/mysql/marzban" ]; then
-  path="/var/lib/mysql/marzban"
-else
-  echo "Neither path exists."
-  exit 1
-fi
+    if [ -d "/var/lib/marzban/mysql" ]; then
+      path="/var/lib/marzban/mysql"
+    elif [ -d "/var/lib/mysql/marzban" ]; then
+      path="/var/lib/mysql/marzban"
+    else
+      echo "Neither path exists."
+      exit 1
+    fi
 
-  sed -i -e 's/\s*=\s*/=/' -e 's/\s*:\s*/:/' -e 's/^\s*//' /opt/marzban/.env
+      sed -i -e 's/\s*=\s*/=/' -e 's/\s*:\s*/:/' -e 's/^\s*//' /opt/marzban/.env
 
-  docker exec marzban-mysql-1 bash -c "mkdir -p /var/lib/mysql/db-backup"
-  source /opt/marzban/.env
+      docker exec marzban-mysql-1 bash -c "mkdir -p /var/lib/mysql/db-backup"
+      source /opt/marzban/.env
 
-    cat > "$path/ac-backup.sh" <<EOL
+        cat > "$path/ac-backup.sh" <<EOL
 #!/bin/bash
 
 USER="root"
@@ -118,80 +119,80 @@ databases=\$(mysql -h 127.0.0.1 --user=\$USER --password=\$PASSWORD -e "SHOW DAT
 for db in \$databases; do
     if [[ "\$db" != "information_schema" ]] && [[ "\$db" != "mysql" ]] && [[ "\$db" != "performance_schema" ]] && [[ "\$db" != "sys" ]] ; then
         echo "Dumping database: \$db"
-		mysqldump -h 127.0.0.1 --force --opt --user=\$USER --password=\$PASSWORD  --routines --databases \$db > /var/lib/mysql/db-backup/\$db.sql
+        mysqldump -h 127.0.0.1 --force --opt --user=\$USER --password=\$PASSWORD  --routines --databases \$db > /var/lib/mysql/db-backup/\$db.sql
 
     fi
 done
 
 EOL
-chmod +x "$path/ac-backup.sh"
+    chmod +x "$path/ac-backup.sh"
 
-ZIP=$(cat <<EOF
+    ZIP=$(cat <<EOF
 
 docker exec marzban-mysql-1 bash -c "/var/lib/mysql/ac-backup.sh"
 zip -r /root/ac-backup-m.zip /opt/marzban/* /var/lib/marzban/* /opt/marzban/.env -x $path/\*
 zip -r /root/ac-backup-m.zip $path/db-backup/*
 rm -rf "$path/db-backup/*"
 EOF
-)
+    )
 
     else
-      ZIP="zip -r /root/ac-backup-m.zip ${dir}/* /var/lib/marzban/* /opt/marzban/.env"
-fi
+        ZIP="zip -r /root/ac-backup-m.zip ${dir}/* /var/lib/marzban/* /opt/marzban/.env"
+    fi
 
-ACLover="marzban backup"
+    ACLover="marzban backup"
 
 elif [[ "$xmhs" == "x" || "$xmhs" == "s" ]]; then
 
-ACLover=""
-dbDir=$(find /etc /opt/freedom /usr/local \
-           -type d \( -iname "x-ui*" -o -iname "s-ui" \) \
-           -print -quit 2>/dev/null)
+    ACLover=""
+    dbDir=$(find /etc /opt/freedom /usr/local \
+               -type d \( -iname "x-ui*" -o -iname "s-ui" \) \
+               -print -quit 2>/dev/null)
 
 
-if [[ -n "${dbDir}" ]]; then
-  echo "The folder exists at $dbDir"
-  if [[ $dbDir == "/opt/freedom/x-ui"* ]]; then
-    dbDir="${dbDir}/db/x-ui.db"
-    ACLover="x-ui backup"
-  elif [[ $dbDir == "/usr/local/s-ui" ]]; then
-    dbDir="${dbDir}/db/s-ui.db" 
-    ACLover="s-ui backup"
-  else
-    dbDir="${dbDir}/x-ui.db"
-    ACLover="x-ui backup"
-  fi
-else
-  echo "The folder does not exist."
-  exit 1
-fi
+    if [[ -n "${dbDir}" ]]; then
+      echo "The folder exists at $dbDir"
+      if [[ $dbDir == "/opt/freedom/x-ui"* ]]; then
+        dbDir="${dbDir}/db/x-ui.db"
+        ACLover="x-ui backup"
+      elif [[ $dbDir == "/usr/local/s-ui" ]]; then
+        dbDir="${dbDir}/db/s-ui.db" 
+        ACLover="s-ui backup"
+      else
+        dbDir="${dbDir}/x-ui.db"
+        ACLover="x-ui backup"
+      fi
+    else
+      echo "The folder does not exist."
+      exit 1
+    fi
 
-configDir=$(find /usr/local -type d -iname "x-ui*" -print -quit 2>/dev/null)
-if [[ -n "${configDir}" ]]; then
-  echo "The folder exists at $configDir"
-  configDir="${configDir}/config.json"
-else
-  configDir=""
-fi
+    configDir=$(find /usr/local -type d -iname "x-ui*" -print -quit 2>/dev/null)
+    if [[ -n "${configDir}" ]]; then
+      echo "The folder exists at $configDir"
+      configDir="${configDir}/config.json"
+    else
+      configDir=""
+    fi
 
-ZIP="zip /root/ac-backup-${xmhs}.zip ${dbDir} ${configDir}"
+    ZIP="zip /root/ac-backup-${xmhs}.zip ${dbDir} ${configDir}"
 
 
 elif [[ "$xmhs" == "h" ]]; then
 
-if ! find /opt/hiddify-manager/hiddify-panel/ -type d -iname "backup" -print -quit; then
-  echo "The folder does not exist."
-  exit 1
-fi
+    if ! find /opt/hiddify-manager/hiddify-panel/ -type d -iname "backup" -print -quit; then
+      echo "The folder does not exist."
+      exit 1
+    fi
 
-if [ -f "/opt/hiddify-manager/hiddify-panel/backup.sh" ]; then
-  backupCommand="bash backup.sh"
-else
-backupCommand="python3 -m hiddifypanel backup"
-fi
+    if [ -f "/opt/hiddify-manager/hiddify-panel/backup.sh" ]; then
+      backupCommand="bash backup.sh"
+    else
+    backupCommand="python3 -m hiddifypanel backup"
+    fi
 
 
-ZIP=$(cat <<EOF
+    ZIP=$(cat <<EOF
 
 cd /opt/hiddify-manager/hiddify-panel/
 if [ $(find /opt/hiddify-manager/hiddify-panel/backup -type f | wc -l) -gt 100 ]; then
@@ -206,12 +207,21 @@ rm -f /root/ac-backup-h.zip
 zip /root/ac-backup-h.zip /opt/hiddify-manager/hiddify-panel/backup/\$latest_file
 
 EOF
-)
-ACLover="hiddify backup"
+    )
+    ACLover="hiddify backup"
+
+# --- Added Root Backup Logic ---
+elif [[ "$xmhs" == "r" ]]; then
+    
+    # We zip /root but exclude the backup file itself to avoid infinite loop or growing file size
+    ZIP="zip -r /root/ac-backup-r.zip /root/ -x /root/ac-backup-r.zip"
+    ACLover="Root Directory Backup"
+
 else
-echo "Please choose m or x or s or h only !"
-exit 1
+    echo "Please choose m, x, s, h or r only !"
+    exit 1
 fi
+# -------------------------------
 
 
 trim() {
