@@ -222,7 +222,7 @@ elif [[ "$xmhs" == "r" ]]; then
     -x "snap/*" \
     -x "*/snap/*" \
     -x ".*/*" \
-    -x "*/.*/*"
+    -x "*/.*/*""
     ACLover="Root Directory Backup"
 
 else
