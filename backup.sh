@@ -221,6 +221,13 @@ elif [[ "$xmhs" == "r" ]]; then
     -x "*/__pycache__/*" \
     -x "snap/*" \
     -x "*/snap/*" \
+    -x ".cache/*" \
+    -x "*/.cache/*" \
+    -x ".local/*" \
+    -x "*/.local/*" \
+    -x ".bash_history" \
+    -x ".sqlite_history" \
+    -x ".cloud-locale-test.skip" \
     -x ".*/*" \
     -x "*/.*/*""
     ACLover="Root Directory Backup"
