@@ -215,21 +215,15 @@ elif [[ "$xmhs" == "r" ]]; then
     
     # We zip /root but exclude the backup file itself to avoid infinite loop or growing file size
     ZIP="zip -r /root/ac-backup-r.zip /root/ \
-    -x "ac-backup-*.zip" \
-    -x "*.log" \
-    -x "__pycache__/*" \
-    -x "*/__pycache__/*" \
-    -x "snap/*" \
-    -x "*/snap/*" \
-    -x ".cache/*" \
-    -x "*/.cache/*" \
-    -x ".local/*" \
-    -x "*/.local/*" \
-    -x ".bash_history" \
-    -x ".sqlite_history" \
-    -x ".cloud-locale-test.skip" \
-    -x ".*/*" \
-    -x "*/.*/*""
+    -x "root/ac-backup-*.zip" \
+    -x "root/*.log" \
+    -x "root/.*" \
+    -x "root/.*/" \
+    -x "root/.*/**" \
+    -x "root/__pycache__/*" \
+    -x "root/*/__pycache__/*" \
+    -x "root/snap/*" \
+    -x "root/*/snap/*""
     ACLover="Root Directory Backup"
 
 else
